@@ -10,4 +10,5 @@ export const configValidationSchema = Joi.object({
   DB_AUTOLOAD_ENTITIES: Joi.boolean().required(),
   DB_SYNCHRONIZE: Joi.boolean().required(),
   JWT_SECRET: Joi.string().required(),
+  PORT: Joi.number().default(3000),
 });

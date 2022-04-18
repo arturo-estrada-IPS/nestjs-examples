@@ -16,16 +16,24 @@ import { TasksModule } from './tasks/tasks.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (cs: ConfigService) => ({
-        type: 'postgres',
-        host: cs.get('DB_HOST'),
-        port: cs.get('DB_PORT'),
-        username: cs.get('DB_USERNAME'),
-        password: cs.get('DB_PASSWORD'),
-        database: cs.get('DB_DATABASE'),
-        autoLoadEntities: cs.get('DB_AUTOLOAD_ENTITIES'),
-        synchronize: cs.get('DB_SYNCHRONIZE'),
-      }),
+      useFactory: async (cs: ConfigService) => {
+        const isProduction = cs.get('STAGE') === 'prod';
+
+        return {
+          ssl: isProduction,
+          extra: {
+            ssl: isProduction ? { rejectUnauthorized: false } : null,
+          },
+          type: 'postgres',
+          host: cs.get('DB_HOST'),
+          port: cs.get('DB_PORT'),
+          username: cs.get('DB_USERNAME'),
+          password: cs.get('DB_PASSWORD'),
+          database: cs.get('DB_DATABASE'),
+          autoLoadEntities: cs.get('DB_AUTOLOAD_ENTITIES'),
+          synchronize: cs.get('DB_SYNCHRONIZE'),
+        };
+      },
     }),
     AuthModule,
   ],
