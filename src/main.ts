@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
 
   await app.listen(port);
-  logger.log(`Server listening on port ${port}`);
+  logger.log(`Server listening on port ${port} (${process.env.STAGE})`);
 }
 
 bootstrap();
